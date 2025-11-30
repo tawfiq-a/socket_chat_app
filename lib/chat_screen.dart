@@ -95,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen>
       "type": "text",
       "msg": text,
       "isMe": true,
-      "time": DateTime.now()
+      "time": DateTime.now(),
     });
 
     _listKey.currentState?.insertItem(messages.length - 1);
@@ -119,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen>
       "type": "image",
       "msg": base64Image,
       "isMe": true,
-      "time": DateTime.now()
+      "time": DateTime.now(),
     });
 
     _listKey.currentState?.insertItem(messages.length - 1);
@@ -135,7 +135,6 @@ class _ChatScreenState extends State<ChatScreen>
       socket.emit("stopTyping", {"clientId": clientId});
     }
   }
-
 
   // ---------------------------- TIME FORMAT ----------------------------
   String formatTime(DateTime t) {
@@ -153,9 +152,9 @@ class _ChatScreenState extends State<ChatScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Chat App"),
-            if (isTyping)
-              Text("typing…",
-                  style: TextStyle(fontSize: 12, color: Colors.white70)),
+            // if (isTyping)
+            //   Text("typing…",
+            //       style: TextStyle(fontSize: 12, color: Colors.white70)),
           ],
         ),
       ),
@@ -180,15 +179,21 @@ class _ChatScreenState extends State<ChatScreen>
                   content = Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(msg,
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: isMe ? Colors.white : Colors.black)),
+                      Text(
+                        msg,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: isMe ? Colors.white : Colors.black,
+                        ),
+                      ),
                       SizedBox(height: 5),
-                      Text(formatTime(time),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: isMe ? Colors.white70 : Colors.grey)),
+                      Text(
+                        formatTime(time),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isMe ? Colors.white70 : Colors.grey,
+                        ),
+                      ),
                     ],
                   );
                 } else {
@@ -198,10 +203,13 @@ class _ChatScreenState extends State<ChatScreen>
                     children: [
                       Image.memory(Uint8List.fromList(bytes), width: 150),
                       SizedBox(height: 5),
-                      Text(formatTime(time),
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: isMe ? Colors.white70 : Colors.grey)),
+                      Text(
+                        formatTime(time),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isMe ? Colors.white70 : Colors.grey,
+                        ),
+                      ),
                     ],
                   );
                 }
@@ -209,23 +217,26 @@ class _ChatScreenState extends State<ChatScreen>
                 return SizeTransition(
                   sizeFactor: animation,
                   child: Align(
-                    alignment:
-                    isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    alignment: isMe
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 5),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: isMe ? Colors.blue : Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 4)
+                          BoxShadow(color: Colors.black12, blurRadius: 4),
                         ],
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(12),
                           topRight: Radius.circular(12),
-                          bottomLeft:
-                          isMe ? Radius.circular(12) : Radius.circular(0),
-                          bottomRight:
-                          isMe ? Radius.circular(0) : Radius.circular(12),
+                          bottomLeft: isMe
+                              ? Radius.circular(12)
+                              : Radius.circular(0),
+                          bottomRight: isMe
+                              ? Radius.circular(0)
+                              : Radius.circular(12),
                         ),
                       ),
                       child: content,
@@ -236,13 +247,35 @@ class _ChatScreenState extends State<ChatScreen>
             ),
           ),
 
+          // ---------- TYPING INDICATOR (Below the message list) ----------
+          if (isTyping)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, bottom: 5),
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: 12,
+                    width: 12,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Text("Typing...", style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            ),
+
           // ------------------------- INPUT BOX -------------------------
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
                 IconButton(
-                    icon: Icon(Icons.image, size: 28), onPressed: sendImage),
+                  icon: Icon(Icons.image, size: 28),
+                  onPressed: sendImage,
+                ),
 
                 Expanded(
                   child: TextField(
@@ -253,7 +286,8 @@ class _ChatScreenState extends State<ChatScreen>
                       fillColor: Colors.white,
                       hintText: "Type a message…",
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25)),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
                   ),
                 ),
@@ -275,4 +309,3 @@ class _ChatScreenState extends State<ChatScreen>
     );
   }
 }
-
